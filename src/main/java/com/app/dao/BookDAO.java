@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookDAO {
-    private DBConnection dbConnection;
+    private final DBConnection dbConnection;
 
-    public BookDAO() {}
     public BookDAO(DBConnection dbConnection) {
         this.dbConnection = dbConnection;
     }
 
+    // Add a new Book to the database
     public Book addBook(Book book){
         String sql ="INSERT INTO books (author, title, price, years_of_publication, isAvailable, type) VALUES (?,?,?,?,?,?)";
 
@@ -42,6 +42,7 @@ public class BookDAO {
         }
     }
 
+    // Retrieve a book by its ID
     public Book getBookById(int id){
         String sql ="SELECT * FROM books WHERE book_id = ?";
         try(Connection con = this.dbConnection.getConnection()){
@@ -49,16 +50,8 @@ public class BookDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
-                int bookId = rs.getInt("book_id");
-                String author = rs.getString("author");
-                String title = rs.getString("title");
-                BigDecimal price = rs.getBigDecimal("price");
-                int yearOfPublication = rs.getInt("years_of_publication");
-                boolean available = rs.getBoolean("isAvailable");
-                String type = rs.getString("type");
-                return new Book(bookId, author, title, price, yearOfPublication, available, type);
+                return mapRowToBook(rs);
             }
-
         }catch (SQLException e) {
             System.err.println("SQLException in getBookById: " + e.getMessage());
             throw new RuntimeException("Database error in getBookById()");
@@ -66,31 +59,21 @@ public class BookDAO {
         return null;
     }
 
+    // Retrieve all books from the database
     public List<Book> getAllBooks(){
         String sql ="SELECT * FROM books";
-        List<Book> books = new ArrayList<>();
+
         try(Connection conn = this.dbConnection.getConnection()){
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                int bookId = rs.getInt("book_id");
-                String author = rs.getString("author");
-                String title = rs.getString("title");
-                BigDecimal price = rs.getBigDecimal("price");
-                int yearOfPublication = rs.getInt("years_of_publication");
-                boolean available = rs.getBoolean("isAvailable");
-                String type = rs.getString("type");
-
-                books.add(new Book(bookId, author, title, price, yearOfPublication, available, type));
-            }
-            return books;
+            return mapResultSetToList(rs);
         }catch (SQLException e) {
             System.err.println("SQLException in getAllBooks(): " + e.getMessage());
-            System.out.println("Database error in getAllBooks()");
+            throw new RuntimeException("Database error in getAllBooks(): " + e.getMessage());
         }
-        return null;
     }
 
+    // Updates the details of an existing Book
     public Book updateBook(Book book, int id){
         String sql = "UPDATE books SET author=?, title = ?, price=?, years_of_publication=?, isAvailable=?, type=? WHERE book_id = ?";
         try(Connection con = this.dbConnection.getConnection()){
@@ -108,11 +91,11 @@ public class BookDAO {
 
         }catch (SQLException e) {
             System.err.println("SQLException in updateBook: " + e.getMessage());
-            throw new RuntimeException("Database error in updateBook()");
+            throw new RuntimeException("Database error in updateBook(): " + e.getMessage());
         }
-
     }
 
+    // Deletes a Book by its ID
     public boolean deleteBook(int id){
         String sql = "DELETE FROM books WHERE book_id = ?";
 
@@ -127,54 +110,36 @@ public class BookDAO {
         }
     }
 
+    // Retrieves all books of a specific type (e.g., Book Bank)
     public  List<Book> getBooksByType(String type){
         String sql ="SELECT * FROM books WHERE type = ?";
-        List<Book> books = new ArrayList<>();
 
         try(Connection con = this.dbConnection.getConnection()){
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, type);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                int bookId = rs.getInt("book_id");
-                String author = rs.getString("author");
-                String title = rs.getString("title");
-                BigDecimal price = rs.getBigDecimal("price");
-                int yearOfPublication = rs.getInt("years_of_publication");
-                String bookType = rs.getString("type");
-                boolean available = rs.getBoolean("isAvailable");
-                books.add(new Book(bookId, author, title, price, yearOfPublication, available, bookType));
-            }
-            return books;
+            return mapResultSetToList(rs);
         }catch (SQLException e) {
             System.err.println("SQLException in getBooksByType: " + e.getMessage());
             throw new RuntimeException("Database error in getBooksByType()");
         }
     }
+    // Retrieves all books by its availability (e.g., true or false)
     public  List<Book> getBooksByAvailable(boolean isBookAvailable){
         String sql ="SELECT * FROM books WHERE isAvailable = ?";
-        List<Book> books = new ArrayList<>();
 
         try(Connection con = this.dbConnection.getConnection()){
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setBoolean(1, isBookAvailable);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                int bookId = rs.getInt("book_id");
-                String author = rs.getString("author");
-                String title = rs.getString("title");
-                BigDecimal price = rs.getBigDecimal("price");
-                int yearOfPublication = rs.getInt("years_of_publication");
-                String bookType = rs.getString("type");
-                boolean available = rs.getBoolean("isAvailable");
-                books.add(new Book(bookId, author, title, price, yearOfPublication, available, bookType));
-            }
-            return books;
+            return mapResultSetToList(rs);
         }catch (SQLException e) {
             System.err.println("SQLException in getBooksByAvailable: " + e.getMessage());
             throw new RuntimeException("Database error in getBooksByAvailable()");
         }
     }
+
+    // Retrieves all books that doesn't have price (e.g., true or false)
     public  List<Book> getBooksByPriceIsNull(boolean priceIsNull){
 
         String sql;
@@ -185,26 +150,36 @@ public class BookDAO {
             sql= "SELECT * FROM books WHERE price IS NOT NULL ";
         }
 
-        List<Book> books = new ArrayList<>();
-
         try(Connection con = this.dbConnection.getConnection()){
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                int bookId = rs.getInt("book_id");
-                String author = rs.getString("author");
-                String title = rs.getString("title");
-                BigDecimal price = rs.getBigDecimal("price");
-                int yearOfPublication = rs.getInt("years_of_publication");
-                String bookType = rs.getString("type");
-                boolean available = rs.getBoolean("isAvailable");
-                books.add(new Book(bookId, author, title, price, yearOfPublication, available, bookType));
-            }
-            return books;
+            return mapResultSetToList(rs);
         }catch (SQLException e) {
             System.err.println("SQLException in getBooksByPriceNull: " + e.getMessage());
             throw new RuntimeException("Database error in getBooksByPriceNull()");
         }
+    }
+
+    // Utility method to map one ResultSet row to Book
+    private Book mapRowToBook(ResultSet rs) throws SQLException {
+        int bookId = rs.getInt("book_id");
+        String author = rs.getString("author");
+        String title = rs.getString("title");
+        BigDecimal price = rs.getBigDecimal("price");
+        int yearOfPublication = rs.getInt("years_of_publication");
+        boolean available = rs.getBoolean("isAvailable");
+        String type = rs.getString("type");
+
+        return new Book(bookId, author, title, price, yearOfPublication, available, type);
+    }
+
+    // Utility method to map entire ResultSet to a List<Book>
+    private List<Book> mapResultSetToList(ResultSet rs) throws SQLException {
+        List<Book> books = new ArrayList<>();
+        while (rs.next()) {
+            books.add(mapRowToBook(rs));
+        }
+        return books;
     }
 
 

@@ -1,101 +1,95 @@
 package com.app.service;
 
-import com.app.config.AppConfig;
 import com.app.dao.BookDAO;
-import com.app.dto.BookDTO;
 import com.app.exception.BookNotFoundException;
-import com.app.exception.ResourceCreationException;
-import com.app.exception.ResourceNotFound;
 import com.app.model.Book;
-import com.app.util.MapperUtil;
-import org.modelmapper.ModelMapper;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BookService {
-    private BookDAO bookDAO;
+    private final BookDAO bookDAO;
 
-    public BookService() {}
     public BookService(BookDAO bookDAO) {
         this.bookDAO = bookDAO;
     }
 
+    // Adds a new book
     public Book addBook(Book book){
         return bookDAO.addBook(book);
     }
 
+    // Retrieves a book by its ID
     public Book getBookById(int id){
         Book book = bookDAO.getBookById(id);
         if(book != null){
             return book;
         }else{
-            throw new ResourceNotFound("Book not found");
+            throw new BookNotFoundException("Get book by id failed: No book found with id " + id);
         }
     }
 
+    // Retrieves all books
     public List<Book> getAllBooks(){
         List<Book> books = bookDAO.getAllBooks();
         if(books != null && !books.isEmpty()){
             return books;
         }else{
-            throw new ResourceNotFound("No books found");
+            throw new BookNotFoundException("Get all books failed: No books found");
         }
     }
 
+    // Updates a book by its ID
     public Book updateBook(Book book, int id){
         Book updatedBook = bookDAO.updateBook(book, id);
-
         if(updatedBook != null){
             return updatedBook;
         }else {
-            throw new ResourceNotFound("Book not found");
+            throw new BookNotFoundException("Update failed: Book not found");
         }
     }
 
+    // Deletes a book by its ID
     public void deleteBook(int id){
         boolean deletedSuccessfully = bookDAO.deleteBook(id);
-
         if(!deletedSuccessfully){
-            throw new ResourceNotFound("Book not found");
+            throw new BookNotFoundException("Delete failed: Book not found");
         }
     }
 
+    // Retrieves all books of a specific type
     public List<Book> getBooksByType(String type){
         List<Book> books = bookDAO.getBooksByType(type);
         if(books != null && !books.isEmpty()){
             return books;
         }else {
-            throw new ResourceNotFound("No books found with type " + type);
+            throw new BookNotFoundException("No books found with type " + type);
         }
     }
 
+    // Retrieves books based on availability
     public List<Book> getBooksByAvailability(boolean availability){
         List<Book> books = bookDAO.getBooksByAvailable(availability);
         if(books != null && !books.isEmpty()){
             return books;
         }else {
             if(availability){
-                throw new ResourceNotFound("No books found available");
+                throw new BookNotFoundException("No books found available");
             }else{
-                throw new ResourceNotFound("All books are available");
+                throw new BookNotFoundException("All books are available");
             }
         }
     }
 
+    // Retrieves books where price is null or not null
     public List<Book> getBooksByPriceIsNull(boolean isPriceIsNull){
         List<Book> books = bookDAO.getBooksByPriceIsNull(isPriceIsNull);
         if(books != null && !books.isEmpty()){
             return books;
         }else{
             if(isPriceIsNull){
-                throw new ResourceNotFound("No books found with price is null");
+                throw new BookNotFoundException("No books found with price is null");
             }else{
-                throw new ResourceNotFound("No book found with price");
+                throw new BookNotFoundException("No book found with price");
             }
         }
     }
-
-
 }
