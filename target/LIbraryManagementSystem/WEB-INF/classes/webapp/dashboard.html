@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+<header class="main-header">
+    <div class="header-content">
+        <h1 class="logo">Library Administration</h1>
+        <div class="header-actions">
+            <span class="welcome-text">WELCOME, <strong>ADMIN</strong></span>
+            <div class="header-links">
+                <a href="#" class="header-link">VIEW SITE</a>
+                <span class="separator">/</span>
+                <a href="#" class="header-link">CHANGE PASSWORD</a>
+                <span class="separator">/</span>
+                <a href="#" class="header-link">LOG OUT</a>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="toggle-icon">🌙</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<nav class="breadcrumb-nav">
+    <div class="breadcrumb-content">
+        <div class="breadcrumb">
+            <a href="#" class="breadcrumb-link">Home</a>
+            <span class="breadcrumb-separator">›</span>
+            <a href="#" class="breadcrumb-link">Tickets</a>
+            <span class="breadcrumb-separator">›</span>
+            <span class="breadcrumb-current">Tickets</span>
+        </div>
+    </div>
+</nav>
+
+<main class="main-content">
+    <div class="content-wrapper">
+        <div class="filter-section">
+            <input type="text" class="filter-input" placeholder="Start typing to filter..." id="filterInput">
+        </div>
+
+        <!-- Dashboard content would go here -->
+        <div class="dashboard-content">
+            <h2>Dashboard Content</h2>
+            <p>Your dashboard content goes here...</p>
+        </div>
+    </div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

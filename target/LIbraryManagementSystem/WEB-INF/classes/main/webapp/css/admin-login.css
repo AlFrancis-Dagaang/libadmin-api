@@ -1,0 +1,120 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+    background-color: #f8f8f8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    justify-content: center; /* Horizontal center */
+    align-items: center;     /* Vertical center */
+    align-items: center;
+}
+
+.header {
+    background-color: #417690;
+    color: white;
+    width: 100%;
+    max-width: 400px;
+    padding: 15px 20px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: normal;
+    border-radius: 4px 4px 0 0;
+}
+
+.login-form {
+    background-color: white;
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+}
+
+.form-row {
+    margin-bottom: 20px;
+}
+
+.form-row label {
+    display: block;
+    color: #333;
+    font-size: 13px;
+    margin-bottom: 5px;
+    font-weight: normal;
+}
+
+.form-row input[type="text"],
+.form-row input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+}
+
+.form-row input[type="text"]:focus,
+.form-row input[type="password"]:focus {
+    outline: none;
+    border-color: #417690;
+    box-shadow: 0 0 0 2px rgba(65, 118, 144, 0.2);
+}
+
+.submit-row {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.submit-row input[type="submit"] {
+    background-color: #417690;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.submit-row input[type="submit"]:hover {
+    background-color: #336682;
+}
+
+.submit-row input[type="submit"]:active {
+    background-color: #2a5470;
+}
+
+@media (max-width: 480px) {
+    body {
+        padding-top: 20px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .header,
+    .login-form {
+        max-width: 100%;
+    }
+}
+
+#loginAlert {
+    position: absolute;
+    top: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 400px;
+    z-index: 10;
+    display: none;
+}
+#loginAlert.show {
+    display: block;
+}
+
