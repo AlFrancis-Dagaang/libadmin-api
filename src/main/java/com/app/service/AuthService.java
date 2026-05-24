@@ -11,6 +11,7 @@ public class AuthService {
         this.authDAO = authDAO;
     }
 
+    // Validates the admin login credentials.
     public void loginAsAdmin(Admin admin) {
         Admin tempAdmin = this.authDAO.getAdminByUsername(admin.getUsername());
 

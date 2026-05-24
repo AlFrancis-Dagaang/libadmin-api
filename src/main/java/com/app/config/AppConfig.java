@@ -3,7 +3,9 @@ package com.app.config;
 import com.app.dao.*;
 import com.app.service.*;
 import com.app.util.DBConnection;
-
+/**
+ * Provides shared service instances for the application.
+ */
 public class AppConfig {
     private static final DBConnection dbConnection = new DBConnection();
 

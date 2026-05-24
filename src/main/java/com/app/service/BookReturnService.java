@@ -23,6 +23,7 @@ public class BookReturnService {
         this.bookReturnBillDAO = bookReturnBillDAO;
     }
 
+    // Processes a book return and updates the related records.
     public Object processBookReturn(BookReturnStatus bookReturn) {
 
 
